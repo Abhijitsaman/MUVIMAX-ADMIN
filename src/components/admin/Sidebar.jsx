@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -37,6 +37,7 @@ const Sidebar = () => {
   const { sidebarCollapsed, toggleSidebar, isDarkMode } = useTheme();
   const { adminRole, checkPermission } = useAuth();
   const [expandedMenus, setExpandedMenus] = useState({});
+  const location = useLocation();
 
   const toggleMenu = (menuKey) => {
     if (sidebarCollapsed) return;
