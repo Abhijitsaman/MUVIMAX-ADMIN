@@ -47,25 +47,60 @@ import SubtitleManagement from '../pages/admin/SubtitleManagement';
 import MetadataManagement from '../pages/admin/MetadataManagement';
 import HelpCenter from '../pages/admin/HelpCenter';
 
+// Loading component for protected routes
+const LoadingScreen = () => (
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    background: '#141414',
+    color: '#ffffff',
+    fontSize: '18px',
+    flexDirection: 'column',
+    gap: '16px'
+  }}>
+    <div style={{
+      width: '40px',
+      height: '40px',
+      border: '3px solid #2a2a2a',
+      borderTop: '3px solid #e50914',
+      borderRadius: '50%',
+      animation: 'spin 0.8s linear infinite'
+    }} />
+    <p>Loading...</p>
+    <style>{`
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
+
 const ProtectedRoute = ({ children }) => {
   const { currentUser, isAdmin, loading } = useAuth();
   
+  // Show loading screen while checking auth
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return <LoadingScreen />;
   }
   
+  // Redirect to login if not authenticated or not admin
   if (!currentUser || !isAdmin) {
     return <Navigate to="/admin/login" replace />;
   }
   
+  // Render children if authenticated
   return children;
 };
 
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<AdminLogin />} />
+      {/* Login route - accessible without authentication */}
+      <Route path="login" element={<AdminLogin />} />
       
+      {/* Protected routes - require admin authentication */}
       <Route path="/" element={
         <ProtectedRoute>
           <AdminLayout />
