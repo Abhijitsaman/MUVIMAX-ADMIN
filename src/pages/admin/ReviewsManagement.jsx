@@ -37,9 +37,10 @@ import {
   FaCalendarAlt,
   FaClock,
   FaReply,
-  FaPin,
-  FaUnpin,
-  FaFire
+  FaFire,
+  FaEllipsisV,
+  FaChevronDown,
+  FaThumbtack
 } from 'react-icons/fa';
 import { format } from 'date-fns';
 
@@ -411,7 +412,7 @@ const ReviewsManagement = () => {
                           )}
                           {review.pinned && (
                             <span className="pinned-badge">
-                              <FaPin /> Pinned
+                              <FaThumbtack /> Pinned
                             </span>
                           )}
                         </div>
@@ -465,7 +466,7 @@ const ReviewsManagement = () => {
                             onClick={() => handleTogglePin(review.id, review.pinned)}
                             title={review.pinned ? 'Unpin' : 'Pin'}
                           >
-                            <FaPin className={review.pinned ? 'active' : ''} />
+                            <FaThumbtack className={review.pinned ? 'active' : ''} />
                           </button>
                           <button 
                             className="action-btn delete"
