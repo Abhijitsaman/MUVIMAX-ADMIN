@@ -15,7 +15,7 @@ import {
   FaCloudUploadAlt,
   FaDownload,
   FaTrash,
-  FaRefresh,
+  FaSync,
   FaHistory,
   FaDatabase,
   FaUsers,
@@ -260,7 +260,7 @@ const BackupManagement = () => {
                           }}
                           title="Restore Backup"
                         >
-                          <FaRefresh />
+                          <FaSync />
                         </button>
                       )}
                       <button 
@@ -307,7 +307,7 @@ const BackupManagement = () => {
                 Cancel
               </button>
               <button className="btn btn-warning" onClick={() => restoreBackup(selectedBackup)}>
-                <FaRefresh /> Restore Backup
+                <FaSync /> Restore Backup
               </button>
             </div>
           </div>
