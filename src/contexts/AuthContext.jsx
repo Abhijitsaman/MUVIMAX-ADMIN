@@ -10,7 +10,6 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -28,7 +27,6 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminRole, setAdminRole] = useState(null);
   const [adminPermissions, setAdminPermissions] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -94,7 +92,7 @@ export const AuthProvider = ({ children }) => {
         email: user.email,
         action: 'login',
         timestamp: serverTimestamp(),
-        ip: 'pending', // Will be updated by backend
+        ip: 'pending',
         userAgent: navigator.userAgent
       });
       
@@ -121,7 +119,6 @@ export const AuthProvider = ({ children }) => {
       }
       
       await signOut(auth);
-      navigate('/admin/login');
       return { success: true };
     } catch (error) {
       console.error('Logout error:', error);
