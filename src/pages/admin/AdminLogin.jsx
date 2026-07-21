@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { FaUser, FaLock, FaEye, FaEyeSlash, FaArrowRight, FaGoogle, FaApple } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaArrowRight, FaShieldAlt } from 'react-icons/fa';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
 
 const AdminLogin = () => {
