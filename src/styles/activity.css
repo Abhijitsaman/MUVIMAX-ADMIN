@@ -1,0 +1,91 @@
+/* Activity Logs Styles */
+.action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.action-badge.primary {
+  background: rgba(229, 9, 20, 0.2);
+  color: var(--primary);
+}
+
+.action-badge.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--success);
+}
+
+.action-badge.warning {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--warning);
+}
+
+.action-badge.danger {
+  background: rgba(244, 67, 54, 0.2);
+  color: var(--danger);
+}
+
+.action-badge.info {
+  background: rgba(33, 150, 243, 0.2);
+  color: var(--info);
+}
+
+.action-badge.secondary {
+  background: rgba(158, 158, 158, 0.2);
+  color: #9e9e9e;
+}
+
+.user-email {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.details-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ip-address {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+/* Column widths */
+.activity-logs .col-action {
+  width: 140px;
+}
+
+.activity-logs .col-user {
+  width: 180px;
+}
+
+.activity-logs .col-ip {
+  width: 120px;
+}
+
+.activity-logs .col-date {
+  width: 180px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .activity-logs .col-ip {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .activity-logs .col-user {
+    display: none;
+  }
+  
+  .activity-logs .col-date {
+    width: 120px;
+  }
+}
