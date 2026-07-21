@@ -1,0 +1,216 @@
+/* Metadata Management Styles */
+.color-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--dark-border);
+  flex-shrink: 0;
+}
+
+.genre-icon,
+.language-flag {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.genre-name-info h4,
+.tag-name-info h4,
+.language-name-info h4,
+.category-name-info h4 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.genre-description,
+.tag-description,
+.category-description {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.slug-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
+  background: var(--secondary);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.movie-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.language-code {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+.native-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.country-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.country-name svg {
+  opacity: 0.6;
+}
+
+.direction-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.direction-badge.ltr {
+  background: rgba(33, 150, 243, 0.2);
+  color: var(--info);
+}
+
+.direction-badge.rtl {
+  background: rgba(156, 39, 176, 0.2);
+  color: #9C27B0;
+}
+
+.color-picker-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.color-picker {
+  width: 40px;
+  height: 40px;
+  padding: 2px;
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.color-hex {
+  flex: 1;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+/* Genre Add/Edit Pages */
+.genre-add-page .genre-form,
+.genre-edit-page .genre-form,
+.tag-add-page .tag-form,
+.tag-edit-page .tag-form,
+.language-add-page .language-form,
+.language-edit-page .language-form,
+.category-add-page .category-form,
+.category-edit-page .category-form {
+  max-width: 100%;
+}
+
+.genre-add-page .form-section h3,
+.genre-edit-page .form-section h3,
+.tag-add-page .form-section h3,
+.tag-edit-page .form-section h3,
+.language-add-page .form-section h3,
+.language-edit-page .form-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* Specific column widths */
+.genres-management .col-color,
+.tags-management .col-color {
+  width: 50px;
+}
+
+.genres-management .col-slug,
+.tags-management .col-slug {
+  width: 150px;
+}
+
+.genres-management .col-movies,
+.tags-management .col-movies,
+.languages-management .col-movies {
+  width: 80px;
+  text-align: center;
+}
+
+.genres-management .col-visibility,
+.tags-management .col-visibility,
+.languages-management .col-status {
+  width: 120px;
+}
+
+.languages-management .col-code {
+  width: 70px;
+}
+
+.languages-management .col-direction {
+  width: 80px;
+}
+
+.languages-management .col-country {
+  width: 120px;
+}
+
+.genres-management .col-date,
+.tags-management .col-date {
+  width: 120px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .genres-management .col-slug,
+  .tags-management .col-slug,
+  .genres-management .col-date,
+  .tags-management .col-date,
+  .languages-management .col-native,
+  .languages-management .col-country,
+  .languages-management .col-direction {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .genres-management .col-movies,
+  .tags-management .col-movies,
+  .languages-management .col-movies {
+    display: none;
+  }
+  
+  .color-picker-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
