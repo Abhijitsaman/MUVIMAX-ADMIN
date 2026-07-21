@@ -1,0 +1,367 @@
+/* Settings Management Styles */
+.settings-layout {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.settings-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.settings-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.settings-tab.active {
+  background: rgba(229, 9, 20, 0.15);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.settings-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-panel {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+}
+
+.settings-section {
+  padding: 4px 0;
+}
+
+/* Logo Upload */
+.logo-upload-section {
+  margin-top: 8px;
+}
+
+.logo-upload-dropzone {
+  border: 2px dashed var(--dark-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-upload-dropzone:hover {
+  border-color: var(--primary);
+  background: rgba(229, 9, 20, 0.05);
+}
+
+.logo-preview {
+  position: relative;
+  width: 100%;
+  max-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-preview img {
+  max-height: 150px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.logo-preview .upload-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+}
+
+.logo-preview .upload-overlay .progress-bar {
+  width: 80%;
+  height: 4px;
+  background: var(--dark-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.logo-preview .upload-overlay .progress-bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  width: var(--progress, 0%);
+  transition: width 0.3s ease;
+}
+
+.logo-preview .upload-overlay span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.remove-logo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.remove-logo:hover {
+  background: var(--danger);
+}
+
+.logo-upload-dropzone .upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.logo-upload-dropzone .upload-placeholder p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.logo-upload-dropzone .upload-placeholder span {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Admin Management */
+.admin-avatar-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.admin-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-name-info h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.super-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #FF6B35;
+  background: rgba(255, 107, 53, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.admin-email {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.admin-email svg {
+  opacity: 0.6;
+}
+
+.last-login {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Security Logs */
+.security-details .detail-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.security-details .detail-row:last-child {
+  border-bottom: none;
+}
+
+.security-details .detail-row label {
+  width: 120px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.security-details .detail-row span,
+.security-details .detail-row .event-type {
+  font-size: 13px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.security-details .detail-row .details-full {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.security-details .detail-row .user-agent {
+  font-size: 12px;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+.security-details .detail-row .metadata-json {
+  background: var(--secondary);
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow-x: auto;
+  max-height: 200px;
+  width: 100%;
+}
+
+.event-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.event-badge.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--success);
+}
+
+.event-badge.danger {
+  background: rgba(244, 67, 54, 0.2);
+  color: var(--danger);
+}
+
+.event-badge.warning {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--warning);
+}
+
+.event-badge.info {
+  background: rgba(33, 150, 243, 0.2);
+  color: var(--info);
+}
+
+.event-badge.primary {
+  background: rgba(229, 9, 20, 0.2);
+  color: var(--primary);
+}
+
+.data-row.clickable {
+  cursor: pointer;
+}
+
+.data-row.clickable:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .settings-layout {
+    flex-direction: column;
+  }
+  
+  .settings-sidebar {
+    width: 100%;
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .settings-tab {
+    width: auto;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .security-details .detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .security-details .detail-row label {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-management .col-last-login {
+    display: none;
+  }
+  
+  .settings-panel {
+    padding: 16px;
+  }
+  
+  .logo-upload-dropzone {
+    min-height: 80px;
+    padding: 16px;
+  }
+  
+  .logo-preview img {
+    max-height: 100px;
+  }
+}
