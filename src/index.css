@@ -1,5 +1,80 @@
 /* এই CSS টি আপনার index.css ফাইলের শেষে যোগ করুন */
 
+/* Premium Badge */
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e50914, #ff0a16);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: absolute;
+  top: -12px;
+  right: 24px;
+  box-shadow: 0 4px 16px rgba(229, 9, 20, 0.4);
+}
+
+.premium-badge svg {
+  font-size: 14px;
+}
+
+/* Login Features */
+.login-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid var(--dark-border);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.feature-icon {
+  font-size: 20px;
+}
+
+/* Floating Icons */
+.floating-icon {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.05);
+  z-index: 0;
+}
+
+.icon-1 {
+  top: 10%;
+  left: 8%;
+}
+
+.icon-2 {
+  top: 25%;
+  right: 10%;
+}
+
+.icon-3 {
+  bottom: 30%;
+  left: 12%;
+}
+
+.icon-4 {
+  bottom: 15%;
+  right: 8%;
+}
+
 /* Google Login Button */
 .google-login-btn {
   display: flex;
@@ -7,22 +82,40 @@
   justify-content: center;
   gap: 12px;
   width: 100%;
-  padding: 14px 24px;
+  padding: 16px 24px;
   background: #ffffff;
   color: #3c4043;
-  border: 1px solid #dadce0;
-  border-radius: 8px;
+  border: none;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.google-login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #4285f4, #ea4335, #fbbc05, #34a853);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+.google-login-btn:hover:not(:disabled)::before {
+  opacity: 0.08;
 }
 
 .google-login-btn:hover:not(:disabled) {
-  background: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .google-login-btn:disabled {
@@ -31,41 +124,148 @@
 }
 
 .google-login-btn .google-icon {
-  font-size: 20px;
+  font-size: 22px;
   color: #ea4335;
+  position: relative;
+  z-index: 1;
+}
+
+.google-login-btn span {
+  position: relative;
+  z-index: 1;
 }
 
 .google-login-btn .spinning {
   animation: spin 0.8s linear infinite;
 }
 
-.login-info {
-  margin-top: 16px;
-  text-align: center;
+/* Login Card Enhancements */
+.login-card {
+  position: relative;
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--card-radius);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
 }
 
-.info-text {
-  font-size: 13px;
+.login-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e50914, #ff0a16, #e50914, transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Login Background Enhancements */
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, #0a0a1a 0%, #0f0f1f 50%, #05050a 100%);
+  overflow: hidden;
+}
+
+.login-background-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.glow-1 {
+  width: 500px;
+  height: 500px;
+  background: #e50914;
+  top: -150px;
+  right: -150px;
+}
+
+.glow-2 {
+  width: 400px;
+  height: 400px;
+  background: #9c27b0;
+  bottom: -100px;
+  left: -100px;
+}
+
+.glow-3 {
+  width: 300px;
+  height: 300px;
+  background: #2196f3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Login Divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--dark-border);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 16px 0;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dark-border), transparent);
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .login-features {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .feature-item {
+    flex-direction: row;
+    padding: 10px 16px;
+    justify-content: center;
+  }
+  
+  .premium-badge {
+    top: -10px;
+    right: 16px;
+    font-size: 10px;
+    padding: 4px 12px;
+  }
+  
+  .floating-icon {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
   .google-login-btn {
     font-size: 14px;
-    padding: 12px 16px;
+    padding: 14px 16px;
+  }
+  
+  .login-header .logo-text {
+    font-size: 24px;
   }
 }
