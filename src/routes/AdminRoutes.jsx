@@ -78,15 +78,15 @@ const LoadingScreen = () => (
 );
 
 const ProtectedRoute = ({ children }) => {
-  const { currentUser, isAdmin, loading } = useAuth();
+  const { currentUser, loading } = useAuth();
   
   // Show loading screen while checking auth
   if (loading) {
     return <LoadingScreen />;
   }
   
-  // Redirect to login if not authenticated or not admin
-  if (!currentUser || !isAdmin) {
+  // Redirect to login if not authenticated
+  if (!currentUser) {
     return <Navigate to="/admin/login" replace />;
   }
   
@@ -100,7 +100,7 @@ const AdminRoutes = () => {
       {/* Login route - accessible without authentication */}
       <Route path="login" element={<AdminLogin />} />
       
-      {/* Protected routes - require admin authentication */}
+      {/* Protected routes - require authentication */}
       <Route path="/" element={
         <ProtectedRoute>
           <AdminLayout />
