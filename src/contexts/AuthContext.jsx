@@ -1,17 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
-  signInWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  sendPasswordResetEmail,
-  setPersistence,
-  browserLocalPersistence,
-  browserSessionPersistence,
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -26,9 +21,6 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [adminRole, setAdminRole] = useState(null);
-  const [adminPermissions, setAdminPermissions] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -36,33 +28,27 @@ export const AuthProvider = ({ children }) => {
       
       if (user) {
         try {
-          const adminDoc = await getDoc(doc(db, 'admins', user.uid));
-          if (adminDoc.exists()) {
-            const adminData = adminDoc.data();
-            setIsAdmin(true);
-            setAdminRole(adminData.role || 'admin');
-            setAdminPermissions(adminData.permissions || []);
-            
-            // Update last login
-            await updateDoc(doc(db, 'admins', user.uid), {
+          // Update last login
+          await updateDoc(doc(db, 'users', user.uid), {
+            lastLogin: serverTimestamp(),
+            lastActive: serverTimestamp()
+          });
+        } catch (error) {
+          // If user document doesn't exist, create it
+          try {
+            await setDoc(doc(db, 'users', user.uid), {
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName,
+              photoURL: user.photoURL,
+              createdAt: serverTimestamp(),
               lastLogin: serverTimestamp(),
               lastActive: serverTimestamp()
             });
-          } else {
-            setIsAdmin(false);
-            setAdminRole(null);
-            setAdminPermissions([]);
+          } catch (err) {
+            console.error('Error creating user document:', err);
           }
-        } catch (error) {
-          console.error('Error checking admin status:', error);
-          setIsAdmin(false);
-          setAdminRole(null);
-          setAdminPermissions([]);
         }
-      } else {
-        setIsAdmin(false);
-        setAdminRole(null);
-        setAdminPermissions([]);
       }
       
       setLoading(false);
@@ -82,13 +68,6 @@ export const AuthProvider = ({ children }) => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       
-      // Check if user is admin
-      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
-      if (!adminDoc.exists()) {
-        await signOut(auth);
-        throw new Error('Unauthorized: Not an admin user');
-      }
-      
       // Log activity
       await setDoc(doc(db, 'activityLogs', `${Date.now()}_${user.uid}`), {
         userId: user.uid,
@@ -96,51 +75,12 @@ export const AuthProvider = ({ children }) => {
         displayName: user.displayName,
         action: 'login_google',
         timestamp: serverTimestamp(),
-        ip: 'pending',
         userAgent: navigator.userAgent
       });
       
       return { success: true, user };
     } catch (error) {
       console.error('Google login error:', error);
-      return { 
-        success: false, 
-        error: error.message 
-      };
-    }
-  };
-
-  // Email/Password Login (রেখে দিচ্ছি কিন্তু ব্যবহার করা হবে না)
-  const login = async (email, password, rememberMe = false) => {
-    try {
-      await setPersistence(
-        auth,
-        rememberMe ? browserLocalPersistence : browserSessionPersistence
-      );
-      
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      
-      // Check if user is admin
-      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
-      if (!adminDoc.exists()) {
-        await signOut(auth);
-        throw new Error('Unauthorized: Not an admin user');
-      }
-      
-      // Log activity
-      await setDoc(doc(db, 'activityLogs', `${Date.now()}_${user.uid}`), {
-        userId: user.uid,
-        email: user.email,
-        action: 'login',
-        timestamp: serverTimestamp(),
-        ip: 'pending',
-        userAgent: navigator.userAgent
-      });
-      
-      return { success: true, user };
-    } catch (error) {
-      console.error('Login error:', error);
       return { 
         success: false, 
         error: error.message 
@@ -171,39 +111,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const resetPassword = async (email) => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      return { success: true };
-    } catch (error) {
-      console.error('Password reset error:', error);
-      return { 
-        success: false, 
-        error: error.message 
-      };
-    }
-  };
-
-  const checkPermission = (module, action) => {
-    if (adminRole === 'super_admin') return true;
-    if (!adminPermissions || adminPermissions.length === 0) return false;
-    
-    return adminPermissions.some(
-      perm => perm.module === module && perm.actions.includes(action)
-    );
-  };
-
   const value = {
     currentUser,
     loading,
-    isAdmin,
-    adminRole,
-    adminPermissions,
-    login,
     loginWithGoogle,
-    logout,
-    resetPassword,
-    checkPermission
+    logout
   };
 
   return (
