@@ -6,7 +6,9 @@ import {
   sendPasswordResetEmail,
   setPersistence,
   browserLocalPersistence,
-  browserSessionPersistence
+  browserSessionPersistence,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
@@ -69,6 +71,46 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  // Google Login
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      // Check if user is admin
+      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+      if (!adminDoc.exists()) {
+        await signOut(auth);
+        throw new Error('Unauthorized: Not an admin user');
+      }
+      
+      // Log activity
+      await setDoc(doc(db, 'activityLogs', `${Date.now()}_${user.uid}`), {
+        userId: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        action: 'login_google',
+        timestamp: serverTimestamp(),
+        ip: 'pending',
+        userAgent: navigator.userAgent
+      });
+      
+      return { success: true, user };
+    } catch (error) {
+      console.error('Google login error:', error);
+      return { 
+        success: false, 
+        error: error.message 
+      };
+    }
+  };
+
+  // Email/Password Login (রেখে দিচ্ছি কিন্তু ব্যবহার করা হবে না)
   const login = async (email, password, rememberMe = false) => {
     try {
       await setPersistence(
@@ -158,6 +200,7 @@ export const AuthProvider = ({ children }) => {
     adminRole,
     adminPermissions,
     login,
+    loginWithGoogle,
     logout,
     resetPassword,
     checkPermission
