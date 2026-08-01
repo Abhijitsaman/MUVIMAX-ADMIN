@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAuth } from '../../contexts/AuthContext';
 import {
   FaHome,
   FaFilm,
@@ -21,21 +20,18 @@ import {
   FaQuestionCircle,
   FaChevronLeft,
   FaChevronRight,
-  FaVideo,
   FaLanguage,
   FaUserTie,
   FaBox,
   FaMusic,
-  FaGlobe,
   FaLayerGroup,
   FaScroll
 } from 'react-icons/fa';
-import { MdMovie, MdTheaters } from 'react-icons/md';
+import { MdMovie } from 'react-icons/md';
 import { motion } from 'framer-motion';
 
 const Sidebar = () => {
   const { sidebarCollapsed, toggleSidebar, isDarkMode } = useTheme();
-  const { adminRole, checkPermission } = useAuth();
   const [expandedMenus, setExpandedMenus] = useState({});
   const location = useLocation();
 
@@ -54,17 +50,16 @@ const Sidebar = () => {
       key: 'dashboard',
       icon: FaHome,
       label: 'Dashboard',
-      path: '/admin/dashboard',
-      module: 'dashboard'
+      path: '/admin/dashboard'
     },
     {
       key: 'content',
       icon: FaFilm,
       label: 'Content',
       children: [
-        { key: 'movies', icon: MdMovie, label: 'Movies', path: '/admin/movies', module: 'movies' },
-        { key: 'banners', icon: FaImage, label: 'Hero Banners', path: '/admin/banners', module: 'banners' },
-        { key: 'subtitles', icon: FaScroll, label: 'Subtitles', path: '/admin/subtitles', module: 'subtitles' }
+        { key: 'movies', icon: MdMovie, label: 'Movies', path: '/admin/movies' },
+        { key: 'banners', icon: FaImage, label: 'Hero Banners', path: '/admin/banners' },
+        { key: 'subtitles', icon: FaScroll, label: 'Subtitles', path: '/admin/subtitles' }
       ]
     },
     {
@@ -72,76 +67,66 @@ const Sidebar = () => {
       icon: FaTags,
       label: 'Metadata',
       children: [
-        { key: 'categories', icon: FaLayerGroup, label: 'Categories', path: '/admin/categories', module: 'categories' },
-        { key: 'genres', icon: FaMusic, label: 'Genres', path: '/admin/genres', module: 'genres' },
-        { key: 'languages', icon: FaLanguage, label: 'Languages', path: '/admin/languages', module: 'languages' },
-        { key: 'tags', icon: FaTags, label: 'Tags', path: '/admin/tags', module: 'tags' },
-        { key: 'cast', icon: FaUserTie, label: 'Cast & Crew', path: '/admin/cast', module: 'cast' },
-        { key: 'metadata', icon: FaBox, label: 'Metadata Settings', path: '/admin/metadata', module: 'metadata' }
+        { key: 'categories', icon: FaLayerGroup, label: 'Categories', path: '/admin/categories' },
+        { key: 'genres', icon: FaMusic, label: 'Genres', path: '/admin/genres' },
+        { key: 'languages', icon: FaLanguage, label: 'Languages', path: '/admin/languages' },
+        { key: 'tags', icon: FaTags, label: 'Tags', path: '/admin/tags' },
+        { key: 'cast', icon: FaUserTie, label: 'Cast & Crew', path: '/admin/cast' },
+        { key: 'metadata', icon: FaBox, label: 'Metadata Settings', path: '/admin/metadata' }
       ]
     },
     {
       key: 'users',
       icon: FaUsers,
       label: 'Users',
-      path: '/admin/users',
-      module: 'users'
+      path: '/admin/users'
     },
     {
       key: 'engagement',
       icon: FaStar,
       label: 'Engagement',
       children: [
-        { key: 'reviews', icon: FaStar, label: 'Reviews', path: '/admin/reviews', module: 'reviews' },
-        { key: 'comments', icon: FaComment, label: 'Comments', path: '/admin/comments', module: 'comments' }
+        { key: 'reviews', icon: FaStar, label: 'Reviews', path: '/admin/reviews' },
+        { key: 'comments', icon: FaComment, label: 'Comments', path: '/admin/comments' }
       ]
     },
     {
       key: 'notifications',
       icon: FaBell,
       label: 'Notifications',
-      path: '/admin/notifications',
-      module: 'notifications'
+      path: '/admin/notifications'
     },
     {
       key: 'analytics',
       icon: FaChartBar,
       label: 'Analytics',
-      path: '/admin/analytics',
-      module: 'analytics'
+      path: '/admin/analytics'
     },
     {
       key: 'system',
       icon: FaCog,
       label: 'System',
       children: [
-        { key: 'settings', icon: FaCog, label: 'Settings', path: '/admin/settings', module: 'settings' },
-        { key: 'storage', icon: FaDatabase, label: 'Storage', path: '/admin/storage', module: 'storage' },
-        { key: 'backup', icon: FaCloudUploadAlt, label: 'Backup', path: '/admin/backup', module: 'backup' },
-        { key: 'activity', icon: FaHistory, label: 'Activity Logs', path: '/admin/activity', module: 'activity' },
-        { key: 'security', icon: FaShieldAlt, label: 'Security Logs', path: '/admin/security', module: 'security' }
+        { key: 'settings', icon: FaCog, label: 'Settings', path: '/admin/settings' },
+        { key: 'storage', icon: FaDatabase, label: 'Storage', path: '/admin/storage' },
+        { key: 'backup', icon: FaCloudUploadAlt, label: 'Backup', path: '/admin/backup' },
+        { key: 'activity', icon: FaHistory, label: 'Activity Logs', path: '/admin/activity' },
+        { key: 'security', icon: FaShieldAlt, label: 'Security Logs', path: '/admin/security' }
       ]
     },
     {
       key: 'admins',
       icon: FaUserCog,
       label: 'Admin Management',
-      path: '/admin/admins',
-      module: 'admins'
+      path: '/admin/admins'
     },
     {
       key: 'help',
       icon: FaQuestionCircle,
       label: 'Help Center',
-      path: '/admin/help',
-      module: 'help'
+      path: '/admin/help'
     }
   ];
-
-  const hasPermission = (module, action = 'view') => {
-    if (adminRole === 'super_admin') return true;
-    return checkPermission(module, action);
-  };
 
   const renderMenuItem = (item, depth = 0) => {
     const isExpanded = expandedMenus[item.key];
@@ -152,12 +137,6 @@ const Sidebar = () => {
     );
 
     if (hasChildren) {
-      const visibleChildren = item.children.filter(child => 
-        hasPermission(child.module, 'view')
-      );
-      
-      if (visibleChildren.length === 0) return null;
-
       return (
         <div key={item.key} className="sidebar-menu-group">
           <button
@@ -190,14 +169,12 @@ const Sidebar = () => {
               transition={{ duration: 0.2 }}
               className="sidebar-submenu"
             >
-              {visibleChildren.map(child => renderMenuItem(child, depth + 1))}
+              {item.children.map(child => renderMenuItem(child, depth + 1))}
             </motion.div>
           )}
         </div>
       );
     }
-
-    if (!hasPermission(item.module, 'view')) return null;
 
     return (
       <NavLink
