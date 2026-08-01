@@ -5,13 +5,10 @@ import {
   collection,
   query,
   getDocs,
-  where,
   orderBy,
+  where,
   limit,
-  count,
-  onSnapshot,
-  doc,
-  getDoc
+  onSnapshot
 } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import {
@@ -21,53 +18,17 @@ import {
   FaComment,
   FaEye,
   FaClock,
-  FaTrendingUp,
-  FaCalendarAlt,
-  FaPlay,
-  FaHeart,
-  FaBookmark,
   FaImage,
   FaTag,
   FaMusic,
   FaGlobe,
   FaBell,
   FaDatabase,
-  FaCloudUploadAlt,
   FaArrowRight,
-  FaExclamationTriangle,
-  FaCheckCircle
+  FaCheckCircle,
+  FaExclamationTriangle
 } from 'react-icons/fa';
-import {
-  MdMovie,
-  MdTheaters,
-  MdVideoLibrary,
-  MdTimeline
-} from 'react-icons/md';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-} from 'chart.js';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
+import { MdMovie } from 'react-icons/md';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -84,26 +45,24 @@ const AdminDashboard = () => {
     totalLanguages: 0,
     totalTags: 0,
     totalCast: 0,
-    totalViews: 0,
-    watchTime: 0,
-    storageUsed: 0,
-    storageLimit: 0
+    storageUsed: 0
   });
   
   const [recentMovies, setRecentMovies] = useState([]);
   const [recentUsers, setRecentUsers] = useState([]);
   const [recentReviews, setRecentReviews] = useState([]);
-  const [recentComments, setRecentComments] = useState([]);
-  const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewStats, setViewStats] = useState([]);
-  const [categoryDistribution, setCategoryDistribution] = useState([]);
+
+  console.log('📊 [AdminDashboard] Rendering, loading:', loading);
 
   useEffect(() => {
+    console.log('📊 [AdminDashboard] Loading dashboard data...');
     const loadDashboardData = async () => {
       try {
-        // Load movies count
+        console.log('📊 [AdminDashboard] Fetching movies count...');
         const moviesSnapshot = await getDocs(collection(db, 'movies'));
+        console.log('📊 [AdminDashboard] Movies count:', moviesSnapshot.size);
+        
         const publishedMoviesSnap = await getDocs(
           query(collection(db, 'movies'), where('status', '==', 'published'))
         );
@@ -111,34 +70,43 @@ const AdminDashboard = () => {
           query(collection(db, 'movies'), where('status', '==', 'draft'))
         );
 
-        // Load users
+        console.log('📊 [AdminDashboard] Fetching users...');
         const usersSnapshot = await getDocs(collection(db, 'users'));
+        console.log('📊 [AdminDashboard] Users count:', usersSnapshot.size);
 
-        // Load reviews
+        console.log('📊 [AdminDashboard] Fetching reviews...');
         const reviewsSnapshot = await getDocs(collection(db, 'reviews'));
+        console.log('📊 [AdminDashboard] Reviews count:', reviewsSnapshot.size);
 
-        // Load comments
+        console.log('📊 [AdminDashboard] Fetching comments...');
         const commentsSnapshot = await getDocs(collection(db, 'comments'));
+        console.log('📊 [AdminDashboard] Comments count:', commentsSnapshot.size);
 
-        // Load banners
+        console.log('📊 [AdminDashboard] Fetching banners...');
         const bannersSnapshot = await getDocs(collection(db, 'heroBanners'));
+        console.log('📊 [AdminDashboard] Banners count:', bannersSnapshot.size);
 
-        // Load categories
+        console.log('📊 [AdminDashboard] Fetching categories...');
         const categoriesSnapshot = await getDocs(collection(db, 'categories'));
+        console.log('📊 [AdminDashboard] Categories count:', categoriesSnapshot.size);
 
-        // Load genres
+        console.log('📊 [AdminDashboard] Fetching genres...');
         const genresSnapshot = await getDocs(collection(db, 'genres'));
+        console.log('📊 [AdminDashboard] Genres count:', genresSnapshot.size);
 
-        // Load languages
+        console.log('📊 [AdminDashboard] Fetching languages...');
         const languagesSnapshot = await getDocs(collection(db, 'languages'));
+        console.log('📊 [AdminDashboard] Languages count:', languagesSnapshot.size);
 
-        // Load tags
+        console.log('📊 [AdminDashboard] Fetching tags...');
         const tagsSnapshot = await getDocs(collection(db, 'tags'));
+        console.log('📊 [AdminDashboard] Tags count:', tagsSnapshot.size);
 
-        // Load cast
+        console.log('📊 [AdminDashboard] Fetching cast...');
         const castSnapshot = await getDocs(collection(db, 'cast'));
+        console.log('📊 [AdminDashboard] Cast count:', castSnapshot.size);
 
-        // Load recent movies
+        console.log('📊 [AdminDashboard] Fetching recent movies...');
         const recentMoviesQuery = query(
           collection(db, 'movies'),
           orderBy('createdAt', 'desc'),
@@ -150,8 +118,9 @@ const AdminDashboard = () => {
           recentMoviesData.push({ id: doc.id, ...doc.data() });
         });
         setRecentMovies(recentMoviesData);
+        console.log('📊 [AdminDashboard] Recent movies:', recentMoviesData.length);
 
-        // Load recent users
+        console.log('📊 [AdminDashboard] Fetching recent users...');
         const recentUsersQuery = query(
           collection(db, 'users'),
           orderBy('createdAt', 'desc'),
@@ -163,8 +132,9 @@ const AdminDashboard = () => {
           recentUsersData.push({ id: doc.id, ...doc.data() });
         });
         setRecentUsers(recentUsersData);
+        console.log('📊 [AdminDashboard] Recent users:', recentUsersData.length);
 
-        // Load recent reviews
+        console.log('📊 [AdminDashboard] Fetching recent reviews...');
         const recentReviewsQuery = query(
           collection(db, 'reviews'),
           orderBy('createdAt', 'desc'),
@@ -176,33 +146,26 @@ const AdminDashboard = () => {
           recentReviewsData.push({ id: doc.id, ...doc.data() });
         });
         setRecentReviews(recentReviewsData);
+        console.log('📊 [AdminDashboard] Recent reviews:', recentReviewsData.length);
 
-        // Load recent comments
-        const recentCommentsQuery = query(
-          collection(db, 'comments'),
-          orderBy('createdAt', 'desc'),
-          limit(5)
-        );
-        const recentCommentsSnap = await getDocs(recentCommentsQuery);
-        const recentCommentsData = [];
-        recentCommentsSnap.forEach((doc) => {
-          recentCommentsData.push({ id: doc.id, ...doc.data() });
+        // Calculate active users
+        let activeCount = 0;
+        const now = new Date();
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+        usersSnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.lastActive && data.lastActive.toDate() > fiveMinutesAgo) {
+            activeCount++;
+          }
         });
-        setRecentComments(recentCommentsData);
-
-        // Calculate storage
-        let storageUsed = 0;
-        const storageSnap = await getDocs(collection(db, 'storage'));
-        storageSnap.forEach((doc) => {
-          storageUsed += doc.data().size || 0;
-        });
+        console.log('📊 [AdminDashboard] Active users:', activeCount);
 
         setStats({
           totalMovies: moviesSnapshot.size,
           publishedMovies: publishedMoviesSnap.size,
           draftMovies: draftMoviesSnap.size,
           totalUsers: usersSnapshot.size,
-          activeUsers: 0, // Will be updated with real-time listener
+          activeUsers: activeCount,
           totalReviews: reviewsSnapshot.size,
           totalComments: commentsSnapshot.size,
           totalBanners: bannersSnapshot.size,
@@ -211,15 +174,13 @@ const AdminDashboard = () => {
           totalLanguages: languagesSnapshot.size,
           totalTags: tagsSnapshot.size,
           totalCast: castSnapshot.size,
-          totalViews: 0,
-          watchTime: 0,
-          storageUsed: storageUsed,
-          storageLimit: 10000000000 // 10GB
+          storageUsed: 0
         });
 
         setLoading(false);
+        console.log('📊 [AdminDashboard] Dashboard data loaded successfully');
       } catch (error) {
-        console.error('Error loading dashboard data:', error);
+        console.error('📊 [AdminDashboard] Error loading dashboard data:', error);
         setLoading(false);
       }
     };
@@ -227,6 +188,7 @@ const AdminDashboard = () => {
     loadDashboardData();
 
     // Real-time listeners for active users
+    console.log('📊 [AdminDashboard] Setting up real-time users listener');
     const usersListener = onSnapshot(collection(db, 'users'), (snapshot) => {
       const now = new Date();
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
@@ -243,9 +205,13 @@ const AdminDashboard = () => {
         ...prev,
         activeUsers: activeCount
       }));
+      console.log('📊 [AdminDashboard] Active users updated:', activeCount);
+    }, (error) => {
+      console.error('📊 [AdminDashboard] Users listener error:', error);
     });
 
     return () => {
+      console.log('📊 [AdminDashboard] Cleaning up users listener');
       usersListener();
     };
   }, []);
@@ -284,14 +250,6 @@ const AdminDashboard = () => {
       subtitle: `${stats.totalCategories} categories, ${stats.totalGenres} genres`
     },
     { 
-      title: 'Languages & Tags', 
-      value: stats.totalLanguages + stats.totalTags, 
-      icon: FaGlobe, 
-      color: '#9C27B0',
-      bgColor: 'rgba(156, 39, 176, 0.1)',
-      subtitle: `${stats.totalLanguages} languages, ${stats.totalTags} tags`
-    },
-    { 
       title: 'Hero Banners', 
       value: stats.totalBanners, 
       icon: FaImage, 
@@ -306,14 +264,6 @@ const AdminDashboard = () => {
       color: '#795548',
       bgColor: 'rgba(121, 85, 72, 0.1)',
       subtitle: 'Total cast & crew'
-    },
-    { 
-      title: 'Storage Usage', 
-      value: (stats.storageUsed / (1024 * 1024 * 1024)).toFixed(2), 
-      icon: FaDatabase, 
-      color: '#FF9800',
-      bgColor: 'rgba(255, 152, 0, 0.1)',
-      subtitle: `${(stats.storageUsed / (1024 * 1024)).toFixed(0)} MB used`
     }
   ];
 
@@ -333,14 +283,36 @@ const AdminDashboard = () => {
   };
 
   if (loading) {
+    console.log('📊 [AdminDashboard] Showing loading state');
     return (
-      <div className="dashboard-loading">
-        <div className="loading-spinner"></div>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '400px',
+        flexDirection: 'column',
+        gap: '16px',
+        color: '#ffffff'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid #2a2a2a',
+          borderTop: '3px solid #e50914',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
         <p>Loading dashboard...</p>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
 
+  console.log('📊 [AdminDashboard] Rendering dashboard content');
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
@@ -435,11 +407,6 @@ const AdminDashboard = () => {
                       <span className={`movie-status status-${movie.status || 'draft'}`}>
                         {movie.status || 'draft'}
                       </span>
-                      {movie.views && (
-                        <span className="movie-views">
-                          <FaEye size={12} /> {movie.views}
-                        </span>
-                      )}
                     </div>
                   </Link>
                 ))}
@@ -486,9 +453,6 @@ const AdminDashboard = () => {
                     <div className="user-info">
                       <h4>{user.displayName || 'User'}</h4>
                       <span className="user-email">{user.email}</span>
-                      {user.role && (
-                        <span className="user-role">{user.role}</span>
-                      )}
                     </div>
                   </Link>
                 ))}
@@ -498,45 +462,38 @@ const AdminDashboard = () => {
         </motion.div>
 
         <motion.div 
-          className="dashboard-widget recent-activity"
+          className="dashboard-widget recent-reviews"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
           <div className="widget-header">
-            <h3>Recent Activity</h3>
-            <Link to="/admin/activity" className="widget-view-all">
+            <h3>Recent Reviews</h3>
+            <Link to="/admin/reviews" className="widget-view-all">
               View All <FaArrowRight size={12} />
             </Link>
           </div>
           <div className="widget-content">
-            <div className="activity-timeline">
-              {recentActivity.length === 0 ? (
-                <div className="widget-empty">
-                  <FaClock size={32} />
-                  <p>No recent activity</p>
-                </div>
-              ) : (
-                recentActivity.map((activity) => (
-                  <div key={activity.id} className="activity-item">
-                    <div className="activity-icon">
-                      {activity.type === 'login' && <FaUsers />}
-                      {activity.type === 'movie_added' && <FaFilm />}
-                      {activity.type === 'movie_edited' && <MdTheaters />}
-                      {activity.type === 'user_joined' && <FaUserPlus />}
-                      {activity.type === 'review_posted' && <FaStar />}
-                      {activity.type === 'comment_posted' && <FaComment />}
-                    </div>
-                    <div className="activity-content">
-                      <p>{activity.description}</p>
-                      <span className="activity-time">
-                        {activity.timestamp?.toDate?.()?.toLocaleString() || 'Just now'}
+            {recentReviews.length === 0 ? (
+              <div className="widget-empty">
+                <FaStar size={32} />
+                <p>No reviews yet</p>
+              </div>
+            ) : (
+              <div className="review-list">
+                {recentReviews.map((review) => (
+                  <div key={review.id} className="review-list-item">
+                    <div className="review-info">
+                      <h4>{review.title || 'Untitled Review'}</h4>
+                      <p className="review-content">{review.content?.substring(0, 60)}...</p>
+                      <span className="review-meta">
+                        <FaStar style={{ color: '#FFD700' }} /> {review.rating || 0} · {review.userName || 'Anonymous'}
                       </span>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>
 
@@ -584,7 +541,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="metric-info">
                   <h4>API Response</h4>
-                  <span className="metric-status warning">Slow</span>
+                  <span className="metric-status warning">Normal</span>
                 </div>
               </div>
             </div>
