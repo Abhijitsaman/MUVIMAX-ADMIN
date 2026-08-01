@@ -48,59 +48,62 @@ import MetadataManagement from '../pages/admin/MetadataManagement';
 import HelpCenter from '../pages/admin/HelpCenter';
 
 // Loading component for protected routes
-const LoadingScreen = () => (
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '100vh',
-    background: '#141414',
-    color: '#ffffff',
-    fontSize: '18px',
-    flexDirection: 'column',
-    gap: '16px'
-  }}>
+const LoadingScreen = () => {
+  console.log('⏳ [AdminRoutes] LoadingScreen rendered');
+  return (
     <div style={{
-      width: '40px',
-      height: '40px',
-      border: '3px solid #2a2a2a',
-      borderTop: '3px solid #e50914',
-      borderRadius: '50%',
-      animation: 'spin 0.8s linear infinite'
-    }} />
-    <p>Loading...</p>
-    <style>{`
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-    `}</style>
-  </div>
-);
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      background: '#141414',
+      color: '#ffffff',
+      fontSize: '18px',
+      flexDirection: 'column',
+      gap: '16px'
+    }}>
+      <div style={{
+        width: '40px',
+        height: '40px',
+        border: '3px solid #2a2a2a',
+        borderTop: '3px solid #e50914',
+        borderRadius: '50%',
+        animation: 'spin 0.8s linear infinite'
+      }} />
+      <p>Loading...</p>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+};
 
 const ProtectedRoute = ({ children }) => {
   const { currentUser, loading } = useAuth();
-  
-  // Show loading screen while checking auth
+  console.log('🛡️ [AdminRoutes] ProtectedRoute - loading:', loading, 'user:', currentUser?.uid || 'none');
+
   if (loading) {
+    console.log('🛡️ [AdminRoutes] Showing loading screen');
     return <LoadingScreen />;
   }
-  
-  // Redirect to login if not authenticated
+
   if (!currentUser) {
+    console.log('🛡️ [AdminRoutes] No user, redirecting to login');
     return <Navigate to="/admin/login" replace />;
   }
-  
-  // Render children if authenticated
+
+  console.log('🛡️ [AdminRoutes] User authenticated, rendering protected content');
   return children;
 };
 
 const AdminRoutes = () => {
+  console.log('🚦 [AdminRoutes] AdminRoutes rendering');
   return (
     <Routes>
-      {/* Login route - accessible without authentication */}
       <Route path="login" element={<AdminLogin />} />
       
-      {/* Protected routes - require authentication */}
       <Route path="/" element={
         <ProtectedRoute>
           <AdminLayout />
