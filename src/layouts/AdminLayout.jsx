@@ -14,17 +14,35 @@ const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  console.log('📐 [AdminLayout] Rendering, user:', currentUser?.uid || 'none', 'path:', location.pathname);
+
   useEffect(() => {
-    // Close mobile sidebar on route change
+    console.log('📐 [AdminLayout] Location changed to:', location.pathname);
     setIsMobileSidebarOpen(false);
   }, [location]);
 
+  useEffect(() => {
+    if (!currentUser) {
+      console.log('📐 [AdminLayout] No user, redirecting to login');
+      navigate('/admin/login', { replace: true });
+    }
+  }, [currentUser, navigate]);
+
   const handleLogout = async () => {
+    console.log('📐 [AdminLayout] Logout clicked');
     const result = await logout();
     if (result.success) {
       navigate('/admin/login', { replace: true });
     }
   };
+
+  // If no user, don't render anything
+  if (!currentUser) {
+    console.log('📐 [AdminLayout] No user, returning null');
+    return null;
+  }
+
+  console.log('📐 [AdminLayout] Rendering full layout');
 
   return (
     <div className={`admin-layout ${isDarkMode ? 'dark' : 'light'}`}>
