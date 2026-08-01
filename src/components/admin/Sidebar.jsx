@@ -39,6 +39,8 @@ const Sidebar = () => {
   const [expandedMenus, setExpandedMenus] = useState({});
   const location = useLocation();
 
+  console.log('📂 [Sidebar] Rendering, path:', location.pathname);
+
   const toggleMenu = (menuKey) => {
     if (sidebarCollapsed) return;
     setExpandedMenus(prev => ({
