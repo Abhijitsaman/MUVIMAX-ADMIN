@@ -29,6 +29,8 @@ const Header = ({ onMenuToggle, onLogout, user }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
+  console.log('👤 [Header] Rendering, user:', user?.uid || 'none');
+
   const getPageTitle = () => {
     const path = location.pathname;
     const segments = path.split('/').filter(Boolean);
@@ -85,8 +87,12 @@ const Header = ({ onMenuToggle, onLogout, user }) => {
   };
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      console.log('👤 [Header] No user, skipping notification listener');
+      return;
+    }
 
+    console.log('👤 [Header] Setting up notification listener for user:', user.uid);
     const q = query(
       collection(db, 'notifications'),
       where('targetUserId', '==', user.uid),
@@ -102,9 +108,15 @@ const Header = ({ onMenuToggle, onLogout, user }) => {
       });
       setNotifications(unreadNotifications);
       setUnreadCount(unreadNotifications.length);
+      console.log('👤 [Header] Notifications updated, unread:', unreadNotifications.length);
+    }, (error) => {
+      console.error('👤 [Header] Notification listener error:', error);
     });
 
-    return () => unsubscribe();
+    return () => {
+      console.log('👤 [Header] Cleaning up notification listener');
+      unsubscribe();
+    };
   }, [user]);
 
   const handleSearch = async (query) => {
@@ -114,6 +126,7 @@ const Header = ({ onMenuToggle, onLogout, user }) => {
       return;
     }
 
+    console.log('🔍 [Header] Searching for:', query);
     // Search across multiple collections
     try {
       // This is a simplified search - in production, you might want to use Algolia or similar
@@ -124,7 +137,7 @@ const Header = ({ onMenuToggle, onLogout, user }) => {
         { type: 'user', label: 'User 1', path: '/admin/users' }
       ]);
     } catch (error) {
-      console.error('Search error:', error);
+      console.error('🔍 [Header] Search error:', error);
     }
   };
 
