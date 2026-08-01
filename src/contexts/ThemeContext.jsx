@@ -15,16 +15,20 @@ export const ThemeProvider = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  console.log('🎨 [ThemeContext] ThemeProvider initializing, darkMode:', isDarkMode);
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('muvimax-theme');
     if (savedTheme) {
       setIsDarkMode(savedTheme === 'dark');
+      console.log('🎨 [ThemeContext] Loaded saved theme:', savedTheme);
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('muvimax-theme', isDarkMode ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    console.log('🎨 [ThemeContext] Theme changed to:', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   const toggleTheme = () => {
