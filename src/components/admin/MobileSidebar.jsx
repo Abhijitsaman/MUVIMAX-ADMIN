@@ -6,29 +6,14 @@ import {
   FaFilm,
   FaImage,
   FaTags,
-  FaUsers,
-  FaStar,
-  FaComment,
-  FaBell,
-  FaChartBar,
-  FaCog,
-  FaDatabase,
-  FaCloudUploadAlt,
-  FaHistory,
-  FaShieldAlt,
-  FaUserCog,
-  FaQuestionCircle,
-  FaTimes,
-  FaVideo,
+  FaMusic,
   FaLanguage,
   FaUserTie,
-  FaBox,
-  FaMusic,
-  FaGlobe,
-  FaLayerGroup,
-  FaScroll
+  FaCog,
+  FaTimes,
+  FaSignOutAlt,
+  FaLayerGroup
 } from 'react-icons/fa';
-import { MdMovie } from 'react-icons/md';
 
 const MobileSidebar = ({ isOpen, onClose, onLogout }) => {
   const menuItems = [
@@ -38,21 +23,8 @@ const MobileSidebar = ({ isOpen, onClose, onLogout }) => {
     { icon: FaLayerGroup, label: 'Categories', path: '/admin/categories' },
     { icon: FaMusic, label: 'Genres', path: '/admin/genres' },
     { icon: FaLanguage, label: 'Languages', path: '/admin/languages' },
-    { icon: FaTags, label: 'Tags', path: '/admin/tags' },
     { icon: FaUserTie, label: 'Cast & Crew', path: '/admin/cast' },
-    { icon: FaScroll, label: 'Subtitles', path: '/admin/subtitles' },
-    { icon: FaUsers, label: 'Users', path: '/admin/users' },
-    { icon: FaStar, label: 'Reviews', path: '/admin/reviews' },
-    { icon: FaComment, label: 'Comments', path: '/admin/comments' },
-    { icon: FaBell, label: 'Notifications', path: '/admin/notifications' },
-    { icon: FaChartBar, label: 'Analytics', path: '/admin/analytics' },
-    { icon: FaCog, label: 'Settings', path: '/admin/settings' },
-    { icon: FaDatabase, label: 'Storage', path: '/admin/storage' },
-    { icon: FaCloudUploadAlt, label: 'Backup', path: '/admin/backup' },
-    { icon: FaHistory, label: 'Activity Logs', path: '/admin/activity' },
-    { icon: FaShieldAlt, label: 'Security Logs', path: '/admin/security' },
-    { icon: FaUserCog, label: 'Admin Management', path: '/admin/admins' },
-    { icon: FaQuestionCircle, label: 'Help Center', path: '/admin/help' }
+    { icon: FaCog, label: 'Profile', path: '/admin/profile' }
   ];
 
   return (
