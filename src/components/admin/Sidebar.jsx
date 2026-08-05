@@ -8,34 +8,20 @@ import {
   FaTags,
   FaUsers,
   FaStar,
-  FaComment,
-  FaBell,
-  FaChartBar,
-  FaCog,
-  FaDatabase,
-  FaCloudUploadAlt,
-  FaHistory,
-  FaShieldAlt,
-  FaUserCog,
-  FaQuestionCircle,
-  FaChevronLeft,
-  FaChevronRight,
+  FaMusic,
   FaLanguage,
   FaUserTie,
-  FaBox,
-  FaMusic,
-  FaLayerGroup,
-  FaScroll
+  FaCog,
+  FaChevronLeft,
+  FaChevronRight,
+  FaLayerGroup
 } from 'react-icons/fa';
-import { MdMovie } from 'react-icons/md';
 import { motion } from 'framer-motion';
 
 const Sidebar = () => {
   const { sidebarCollapsed, toggleSidebar, isDarkMode } = useTheme();
   const [expandedMenus, setExpandedMenus] = useState({});
   const location = useLocation();
-
-  console.log('📂 [Sidebar] Rendering, path:', location.pathname);
 
   const toggleMenu = (menuKey) => {
     if (sidebarCollapsed) return;
@@ -57,9 +43,8 @@ const Sidebar = () => {
       icon: FaFilm,
       label: 'Content',
       children: [
-        { key: 'movies', icon: MdMovie, label: 'Movies', path: '/admin/movies' },
-        { key: 'banners', icon: FaImage, label: 'Hero Banners', path: '/admin/banners' },
-        { key: 'subtitles', icon: FaScroll, label: 'Subtitles', path: '/admin/subtitles' }
+        { key: 'movies', icon: FaFilm, label: 'Movies', path: '/admin/movies' },
+        { key: 'banners', icon: FaImage, label: 'Hero Banners', path: '/admin/banners' }
       ]
     },
     {
@@ -70,68 +55,20 @@ const Sidebar = () => {
         { key: 'categories', icon: FaLayerGroup, label: 'Categories', path: '/admin/categories' },
         { key: 'genres', icon: FaMusic, label: 'Genres', path: '/admin/genres' },
         { key: 'languages', icon: FaLanguage, label: 'Languages', path: '/admin/languages' },
-        { key: 'tags', icon: FaTags, label: 'Tags', path: '/admin/tags' },
-        { key: 'cast', icon: FaUserTie, label: 'Cast & Crew', path: '/admin/cast' },
-        { key: 'metadata', icon: FaBox, label: 'Metadata Settings', path: '/admin/metadata' }
+        { key: 'cast', icon: FaUserTie, label: 'Cast & Crew', path: '/admin/cast' }
       ]
     },
     {
-      key: 'users',
-      icon: FaUsers,
-      label: 'Users',
-      path: '/admin/users'
-    },
-    {
-      key: 'engagement',
-      icon: FaStar,
-      label: 'Engagement',
-      children: [
-        { key: 'reviews', icon: FaStar, label: 'Reviews', path: '/admin/reviews' },
-        { key: 'comments', icon: FaComment, label: 'Comments', path: '/admin/comments' }
-      ]
-    },
-    {
-      key: 'notifications',
-      icon: FaBell,
-      label: 'Notifications',
-      path: '/admin/notifications'
-    },
-    {
-      key: 'analytics',
-      icon: FaChartBar,
-      label: 'Analytics',
-      path: '/admin/analytics'
-    },
-    {
-      key: 'system',
+      key: 'profile',
       icon: FaCog,
-      label: 'System',
-      children: [
-        { key: 'settings', icon: FaCog, label: 'Settings', path: '/admin/settings' },
-        { key: 'storage', icon: FaDatabase, label: 'Storage', path: '/admin/storage' },
-        { key: 'backup', icon: FaCloudUploadAlt, label: 'Backup', path: '/admin/backup' },
-        { key: 'activity', icon: FaHistory, label: 'Activity Logs', path: '/admin/activity' },
-        { key: 'security', icon: FaShieldAlt, label: 'Security Logs', path: '/admin/security' }
-      ]
-    },
-    {
-      key: 'admins',
-      icon: FaUserCog,
-      label: 'Admin Management',
-      path: '/admin/admins'
-    },
-    {
-      key: 'help',
-      icon: FaQuestionCircle,
-      label: 'Help Center',
-      path: '/admin/help'
+      label: 'Profile',
+      path: '/admin/profile'
     }
   ];
 
   const renderMenuItem = (item, depth = 0) => {
     const isExpanded = expandedMenus[item.key];
     const hasChildren = item.children && item.children.length > 0;
-    const isActive = item.path && location.pathname === item.path;
     const isChildActive = hasChildren && item.children.some(
       child => location.pathname === child.path
     );
