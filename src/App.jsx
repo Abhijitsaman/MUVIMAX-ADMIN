@@ -5,19 +5,10 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import AdminRoutes from './routes/AdminRoutes';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
-import './styles/movie-form.css';
-import './styles/banner.css';
-import './styles/metadata.css';
-import './styles/users.css';
-import './styles/reviews.css';
-import './styles/activity.css';
-import './styles/settings.css';
-
-// Debug: Log app startup
-console.log('🚀 [App] Application starting...');
+// নতুন CSS যোগ করছি (পুরনোগুলো রেখেই)
+import './styles/admin.css';
 
 function App() {
-  console.log('🚀 [App] Rendering App component');
   return (
     <ErrorBoundary>
       <ThemeProvider>
