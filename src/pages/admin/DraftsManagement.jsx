@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { db } from '../../firebase/config';
 import {
   collection,
@@ -20,16 +20,12 @@ import {
   FaTimes,
   FaExclamationCircle,
   FaFilm,
-  FaTags,
   FaSort,
   FaSortUp,
   FaSortDown,
-  FaCalendarAlt,
   FaClock,
-  FaCheckCircle,
-  FaEye,
-  FaEyeSlash,
-  FaPlay
+  FaPlay,
+  FaCheckCircle
 } from 'react-icons/fa';
 import { format } from 'date-fns';
 
@@ -111,8 +107,7 @@ const DraftsManagement = () => {
     const search = searchTerm.toLowerCase();
     return (
       draft.title?.toLowerCase().includes(search) ||
-      draft.language?.toLowerCase().includes(search) ||
-      draft.categories?.some(cat => cat.toLowerCase().includes(search))
+      draft.language?.toLowerCase().includes(search)
     );
   });
 
@@ -169,7 +164,6 @@ const DraftsManagement = () => {
                 )}
               </th>
               <th className="col-category">Categories</th>
-              <th className="col-language">Language</th>
               <th className="col-status">Status</th>
               <th className="col-date" onClick={() => handleSort('createdAt')}>
                 Created
@@ -183,7 +177,7 @@ const DraftsManagement = () => {
           <tbody>
             {filteredDrafts.length === 0 ? (
               <tr>
-                <td colSpan="7">
+                <td colSpan="6">
                   <div className="empty-state">
                     <FaFilm size={48} />
                     <h3>No drafts found</h3>
@@ -214,9 +208,6 @@ const DraftsManagement = () => {
                   <td className="col-title">
                     <div className="movie-title-info">
                       <h4>{draft.title}</h4>
-                      {draft.originalTitle && (
-                        <span className="original-title">{draft.originalTitle}</span>
-                      )}
                     </div>
                   </td>
                   <td className="col-category">
@@ -224,13 +215,7 @@ const DraftsManagement = () => {
                       {(draft.categories || []).slice(0, 2).map(cat => (
                         <span key={cat} className="tag">{cat}</span>
                       ))}
-                      {(draft.categories || []).length > 2 && (
-                        <span className="tag-more">+{(draft.categories || []).length - 2}</span>
-                      )}
                     </div>
-                  </td>
-                  <td className="col-language">
-                    <span className="language-text">{draft.language || 'N/A'}</span>
                   </td>
                   <td className="col-status">
                     <span className="status-badge warning">
