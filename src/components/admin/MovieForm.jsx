@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { storage } from '../../firebase/config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { normalizeImageUrl } from '../../utils/imageUtils';
 import {
   FaPlus,
   FaTrash,
@@ -112,10 +113,22 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
       });
 
       setMedia({
-        banner: { url: initialData.banner || '', preview: initialData.banner || '' },
-        poster: { url: initialData.poster || '', preview: initialData.poster || '' },
-        thumbnail: { url: initialData.thumbnail || '', preview: initialData.thumbnail || '' },
-        backdrops: (initialData.backdrops || []).map(url => ({ url, preview: url }))
+        banner: { 
+          url: initialData.banner || '', 
+          preview: normalizeImageUrl(initialData.banner) || initialData.banner || '' 
+        },
+        poster: { 
+          url: initialData.poster || '', 
+          preview: normalizeImageUrl(initialData.poster) || initialData.poster || '' 
+        },
+        thumbnail: { 
+          url: initialData.thumbnail || '', 
+          preview: normalizeImageUrl(initialData.thumbnail) || initialData.thumbnail || '' 
+        },
+        backdrops: (initialData.backdrops || []).map(url => ({ 
+          url, 
+          preview: normalizeImageUrl(url) || url 
+        }))
       });
 
       setVideoSource({
@@ -181,6 +194,17 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
         }
       }
     );
+  };
+
+  const handleMediaUrlChange = (type, url) => {
+    const normalized = normalizeImageUrl(url);
+    if (type === 'banner') {
+      setMedia(prev => ({ ...prev, banner: { url, preview: normalized || url } }));
+    } else if (type === 'poster') {
+      setMedia(prev => ({ ...prev, poster: { url, preview: normalized || url } }));
+    } else if (type === 'thumbnail') {
+      setMedia(prev => ({ ...prev, thumbnail: { url, preview: normalized || url } }));
+    }
   };
 
   const sections = [
@@ -331,6 +355,15 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
                     style={{ display: 'none' }}
                   />
                 </div>
+                <div className="url-input">
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL"
+                    value={media.banner.url}
+                    onChange={(e) => handleMediaUrlChange('banner', e.target.value)}
+                    className="form-input"
+                  />
+                </div>
               </div>
 
               <div className="media-upload-card">
@@ -350,6 +383,15 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
                     onChange={(e) => handleFileUpload('poster', e.target.files[0])}
                     accept="image/*"
                     style={{ display: 'none' }}
+                  />
+                </div>
+                <div className="url-input">
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL"
+                    value={media.poster.url}
+                    onChange={(e) => handleMediaUrlChange('poster', e.target.value)}
+                    className="form-input"
                   />
                 </div>
               </div>
@@ -373,6 +415,15 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
                     style={{ display: 'none' }}
                   />
                 </div>
+                <div className="url-input">
+                  <input
+                    type="text"
+                    placeholder="Or paste image URL"
+                    value={media.thumbnail.url}
+                    onChange={(e) => handleMediaUrlChange('thumbnail', e.target.value)}
+                    className="form-input"
+                  />
+                </div>
               </div>
             </div>
 
@@ -381,7 +432,7 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
               <div className="backdrops-grid">
                 {media.backdrops.map((backdrop, index) => (
                   <div key={index} className="backdrop-item">
-                    <img src={backdrop.preview} alt={`Backdrop ${index + 1}`} />
+                    <img src={backdrop.preview || backdrop.url} alt={`Backdrop ${index + 1}`} />
                     <button
                       className="remove-backdrop"
                       onClick={() => setMedia(prev => ({
@@ -403,6 +454,21 @@ const MovieForm = ({ initialData, onSubmit, isEditing = false }) => {
                     style={{ display: 'none' }}
                   />
                 </div>
+              </div>
+              <div className="url-input">
+                <input
+                  type="text"
+                  placeholder="Or paste image URL for backdrop"
+                  onChange={(e) => {
+                    const url = e.target.value;
+                    const normalized = normalizeImageUrl(url);
+                    setMedia(prev => ({
+                      ...prev,
+                      backdrops: [...prev.backdrops, { url, preview: normalized || url }]
+                    }));
+                  }}
+                  className="form-input"
+                />
               </div>
             </div>
           </div>
