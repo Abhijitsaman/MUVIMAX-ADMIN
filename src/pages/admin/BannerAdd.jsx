@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { db, storage } from '../../firebase/config';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { normalizeImageUrl } from '../../utils/imageUtils';
 import {
   FaArrowLeft,
   FaSave,
@@ -20,8 +21,17 @@ import {
 import { motion } from 'framer-motion';
 
 const BannerAdd = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const isEditMode = !!id;
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(isEditMode);
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState(false);
+  const [movies, setMovies] = useState([]);
+  const [loadingMovies, setLoadingMovies] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -56,14 +66,68 @@ const BannerAdd = () => {
     isUploading: false
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(false);
-  const [movies, setMovies] = useState([]);
-  const [loadingMovies, setLoadingMovies] = useState(false);
-
+  // Fetch existing banner data for edit mode
   useEffect(() => {
-    // Fetch movies for linking
+    if (isEditMode && id) {
+      const fetchBanner = async () => {
+        try {
+          const docRef = doc(db, 'heroBanners', id);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setFormData({
+              title: data.title || '',
+              subtitle: data.subtitle || '',
+              description: data.description || '',
+              ctaText: data.ctaText || 'Watch Now',
+              ctaText2: data.ctaText2 || '',
+              order: data.order || 0,
+              status: data.status || 'draft',
+              visibility: data.visibility || 'visible',
+              linkType: data.linkType || 'movie',
+              movieId: data.movieId || '',
+              movieTitle: data.movieTitle || '',
+              customUrl: data.customUrl || '',
+              internalRoute: data.internalRoute || '',
+              publishDate: data.publishDate || '',
+              publishTime: data.publishTime || '',
+              expireDate: data.expireDate || '',
+              expireTime: data.expireTime || '',
+              autoRotate: data.autoRotate !== undefined ? data.autoRotate : true,
+              rotationInterval: data.rotationInterval || 5,
+              loop: data.loop !== undefined ? data.loop : true,
+              pauseOnHover: data.pauseOnHover !== undefined ? data.pauseOnHover : true
+            });
+
+            if (data.image) {
+              const normalizedUrl = normalizeImageUrl(data.image);
+              setBannerImage({
+                method: 'url',
+                file: null,
+                url: data.image,
+                preview: normalizedUrl,
+                uploadProgress: 0,
+                isUploading: false
+              });
+            }
+          } else {
+            setErrors(prev => ({ ...prev, fetch: 'Banner not found' }));
+          }
+        } catch (error) {
+          console.error('Error fetching banner:', error);
+          setErrors(prev => ({ ...prev, fetch: 'Failed to load banner data' }));
+        } finally {
+          setIsFetching(false);
+        }
+      };
+
+      fetchBanner();
+    }
+  }, [id, isEditMode]);
+
+  // Fetch movies for linking
+  useEffect(() => {
     const fetchMovies = async () => {
       setLoadingMovies(true);
       try {
@@ -110,7 +174,6 @@ const BannerAdd = () => {
         isUploading: true 
       }));
 
-      // Upload to Firebase Storage
       const storageRef = ref(storage, `banners/${Date.now()}_${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -173,13 +236,15 @@ const BannerAdd = () => {
       const bannerData = {
         ...formData,
         image: bannerImage.url || bannerImage.preview,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        views: 0,
-        clicks: 0
+        updatedAt: serverTimestamp()
       };
 
-      await addDoc(collection(db, 'heroBanners'), bannerData);
+      if (isEditMode) {
+        await updateDoc(doc(db, 'heroBanners', id), bannerData);
+      } else {
+        bannerData.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'heroBanners'), bannerData);
+      }
       
       setSuccess(true);
       setTimeout(() => {
@@ -193,10 +258,19 @@ const BannerAdd = () => {
   };
 
   const handleDiscard = () => {
-    if (window.confirm('Are you sure you want to discard this banner?')) {
+    if (window.confirm(`Are you sure you want to discard this ${isEditMode ? 'changes to' : ''} banner?`)) {
       navigate('/admin/banners');
     }
   };
+
+  if (isFetching) {
+    return (
+      <div className="page-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading banner data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="banner-add-page">
@@ -205,7 +279,7 @@ const BannerAdd = () => {
           <button className="btn btn-secondary" onClick={() => navigate('/admin/banners')}>
             <FaArrowLeft /> Back
           </button>
-          <h1>Add Hero Banner</h1>
+          <h1>{isEditMode ? 'Edit Hero Banner' : 'Add Hero Banner'}</h1>
         </div>
         <div className="page-header-right">
           <button className="btn btn-secondary" onClick={handleDiscard}>
@@ -213,10 +287,17 @@ const BannerAdd = () => {
           </button>
           <button className="btn btn-primary" onClick={handleSubmit} disabled={isLoading}>
             {isLoading ? <FaSpinner className="spinning" /> : <FaSave />}
-            {isLoading ? 'Saving...' : 'Save Banner'}
+            {isLoading ? 'Saving...' : isEditMode ? 'Update Banner' : 'Save Banner'}
           </button>
         </div>
       </div>
+
+      {errors.fetch && (
+        <div className="error-banner">
+          <FaExclamationTriangle />
+          <span>{errors.fetch}</span>
+        </div>
+      )}
 
       {errors.submit && (
         <div className="error-banner">
@@ -228,7 +309,7 @@ const BannerAdd = () => {
       {success && (
         <div className="success-banner">
           <FaCheckCircle />
-          <span>Banner saved successfully! Redirecting...</span>
+          <span>Banner {isEditMode ? 'updated' : 'saved'} successfully! Redirecting...</span>
         </div>
       )}
 
@@ -293,18 +374,26 @@ const BannerAdd = () => {
                     type="url"
                     value={bannerImage.url}
                     onChange={(e) => {
+                      const normalized = normalizeImageUrl(e.target.value);
                       setBannerImage(prev => ({ 
                         ...prev, 
                         url: e.target.value, 
-                        preview: e.target.value 
+                        preview: normalized || e.target.value
                       }));
                     }}
-                    placeholder="https://example.com/banner.jpg"
+                    placeholder="https://example.com/banner.jpg or Google Drive URL"
                     className="form-input"
                   />
+                  <span className="input-hint">Supports: Direct image URLs and Google Drive sharing URLs</span>
                   {bannerImage.preview && (
                     <div className="upload-preview">
-                      <img src={bannerImage.preview} alt="Banner preview" />
+                      <img 
+                        src={bannerImage.preview} 
+                        alt="Banner preview" 
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
                       <button
                         className="remove-media"
                         onClick={() => setBannerImage({ method: 'url', file: null, url: '', preview: '', uploadProgress: 0, isUploading: false })}
@@ -319,6 +408,7 @@ const BannerAdd = () => {
             </div>
           </div>
 
+          {/* Rest of the form remains the same */}
           {/* Banner Information */}
           <div className="form-section full-width">
             <h3>Banner Information</h3>
