@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaGoogle, FaSpinner, FaCheckCircle, FaShieldAlt } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { 
+  FaGoogle, 
+  FaShieldAlt,
+  FaSpinner,
+  FaFilm,
+  FaPlay,
+  FaStar,
+  FaTv
+} from 'react-icons/fa';
+import { IoMdCheckmarkCircle } from 'react-icons/io';
 
 const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [ripples, setRipples] = useState([]);
 
   const { loginWithGoogle, currentUser } = useAuth();
   const navigate = useNavigate();
@@ -19,29 +27,7 @@ const AdminLogin = () => {
     }
   }, [currentUser, navigate]);
 
-  // Handle ripple effect on button click
-  const handleRipple = (e) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = e.clientX - rect.left - size / 2;
-    const y = e.clientY - rect.top - size / 2;
-    
-    const ripple = {
-      id: Date.now(),
-      x,
-      y,
-      size
-    };
-    
-    setRipples(prev => [...prev, ripple]);
-    setTimeout(() => {
-      setRipples(prev => prev.filter(r => r.id !== ripple.id));
-    }, 600);
-  };
-
-  const handleGoogleLogin = async (e) => {
-    handleRipple(e);
+  const handleGoogleLogin = async () => {
     setError('');
     setSuccess(false);
     setIsLoading(true);
@@ -52,7 +38,7 @@ const AdminLogin = () => {
       setSuccess(true);
       setTimeout(() => {
         navigate('/admin/dashboard');
-      }, 1200);
+      }, 1000);
     } else {
       if (result.error?.includes('popup-closed')) {
         setError('Login cancelled. Please try again.');
@@ -65,211 +51,189 @@ const AdminLogin = () => {
     }
   };
 
-  // Particles animation
-  const particles = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 10 + 10,
-    delay: Math.random() * 5
-  }));
-
   return (
     <div className="admin-login-page">
-      {/* Background */}
+      {/* Animated Background */}
       <div className="login-background">
-        {/* Gradients */}
         <div className="login-background-overlay"></div>
-        <div className="login-bg-gradient gradient-1"></div>
-        <div className="login-bg-gradient gradient-2"></div>
-        <div className="login-bg-gradient gradient-3"></div>
         
-        {/* Particles */}
-        <div className="login-particles">
-          {particles.map((particle) => (
-            <motion.div
-              key={particle.id}
-              className="particle"
-              style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                width: particle.size,
-                height: particle.size,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.1, 0.5, 0.1],
-              }}
-              transition={{
-                duration: particle.duration,
-                delay: particle.delay,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Floating Orbs */}
+        {/* Animated Gradient Orbs */}
         <motion.div 
-          className="floating-orb orb-1"
+          className="login-background-glow glow-1"
           animate={{ 
-            y: [0, -40, 0],
-            x: [0, 30, 0],
+            scale: [1, 1.2, 1],
+            x: [0, 50, 0],
+            y: [0, -30, 0]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div 
-          className="floating-orb orb-2"
+          className="login-background-glow glow-2"
           animate={{ 
-            y: [0, 50, 0],
+            scale: [1, 1.3, 1],
             x: [0, -40, 0],
+            y: [0, 30, 0]
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div 
-          className="floating-orb orb-3"
+          className="login-background-glow glow-3"
           animate={{ 
-            y: [0, -30, 0],
-            x: [0, -20, 0],
+            scale: [1, 1.1, 1],
+            x: [0, 30, 0],
+            y: [0, -20, 0]
           }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
+
+        {/* Floating Elements */}
+        <motion.div 
+          className="floating-icon icon-1"
+          animate={{ y: [-20, 20, -20] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <FaFilm size={24} />
+        </motion.div>
+        <motion.div 
+          className="floating-icon icon-2"
+          animate={{ y: [20, -20, 20] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <FaPlay size={24} />
+        </motion.div>
+        <motion.div 
+          className="floating-icon icon-3"
+          animate={{ y: [-15, 15, -15] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <FaStar size={24} />
+        </motion.div>
+        <motion.div 
+          className="floating-icon icon-4"
+          animate={{ y: [15, -15, 15] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <FaTv size={24} />
+        </motion.div>
       </div>
 
-      {/* Login Container */}
       <div className="login-container">
         <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
           className="login-card"
         >
-          {/* Security Badge */}
+          {/* Premium Badge */}
           <motion.div 
-            className="security-badge"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="premium-badge"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
             <FaShieldAlt />
-            <span>Secure Admin Access</span>
+            <span>Admin Access</span>
           </motion.div>
 
-          {/* Header */}
           <div className="login-header">
             <motion.div 
               className="login-logo"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
             >
-              <div className="logo-icon-wrapper">
-                <span className="logo-icon">🎬</span>
-              </div>
-              <div className="logo-text-wrapper">
-                <span className="logo-text">MUVIMAX</span>
-                <span className="logo-subtitle">Admin Dashboard</span>
-              </div>
+              <span className="logo-icon">🎬</span>
+              <span className="logo-text">MUVIMAX</span>
             </motion.div>
+            <motion.span 
+              className="login-badge"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              Admin Panel
+            </motion.span>
           </div>
 
-          {/* Body */}
           <div className="login-body">
-            <motion.div
+            <motion.h2
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <h2 className="login-title">Welcome back</h2>
-              <p className="login-subtitle">
-                Sign in to continue managing your OTT platform
-              </p>
-            </motion.div>
+              Welcome Back
+            </motion.h2>
+            <motion.p 
+              className="login-subtitle"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              Sign in to manage your OTT platform
+            </motion.p>
 
-            {/* Error Message */}
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  className="login-error"
-                >
-                  <span className="error-icon">✕</span>
-                  <span className="error-text">{error}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="login-error"
+              >
+                <span className="error-icon">⚠</span>
+                {error}
+              </motion.div>
+            )}
 
-            {/* Success Message */}
-            <AnimatePresence>
-              {success && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  className="login-success"
-                >
-                  <FaCheckCircle className="success-icon" />
-                  <span>Login successful! Redirecting...</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {success && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="login-success"
+              >
+                <IoMdCheckmarkCircle size={20} />
+                Login successful! Redirecting...
+              </motion.div>
+            )}
 
-            {/* Google Login Button */}
-            <motion.div
+            <motion.div 
+              className="login-form"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="login-form"
+              transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <button
+              <button 
                 type="button"
                 onClick={handleGoogleLogin}
-                disabled={isLoading || success}
-                className={`google-login-btn ${isLoading ? 'loading' : ''} ${success ? 'success' : ''}`}
+                className="google-login-btn"
+                disabled={isLoading}
               >
-                {ripples.map((ripple) => (
-                  <span
-                    key={ripple.id}
-                    className="ripple-effect"
-                    style={{
-                      left: ripple.x,
-                      top: ripple.y,
-                      width: ripple.size,
-                      height: ripple.size,
-                    }}
-                  />
-                ))}
-                <span className="btn-content">
-                  {isLoading ? (
-                    <>
-                      <FaSpinner className="spinner-icon" />
-                      <span className="btn-text">Signing you in...</span>
-                    </>
-                  ) : success ? (
-                    <>
-                      <FaCheckCircle className="success-icon-btn" />
-                      <span className="btn-text">Login successful</span>
-                    </>
-                  ) : (
-                    <>
-                      <FaGoogle className="google-icon" />
-                      <span className="btn-text">Continue with Google</span>
-                    </>
-                  )}
-                </span>
+                {isLoading ? (
+                  <>
+                    <FaSpinner className="spinning" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    <FaGoogle className="google-icon" />
+                    Continue with Google
+                  </>
+                )}
               </button>
             </motion.div>
 
-            {/* Features */}
-            <motion.div
+            <motion.div 
+              className="login-divider"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              <span>Secure Admin Access</span>
+            </motion.div>
+
+            <motion.div 
               className="login-features"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
             >
               <div className="feature-item">
                 <span className="feature-icon">🔐</span>
@@ -277,7 +241,7 @@ const AdminLogin = () => {
               </div>
               <div className="feature-item">
                 <span className="feature-icon">📊</span>
-                <span>Real-time Analytics</span>
+                <span>Full Analytics Control</span>
               </div>
               <div className="feature-item">
                 <span className="feature-icon">🎬</span>
@@ -285,20 +249,18 @@ const AdminLogin = () => {
               </div>
             </motion.div>
 
-            {/* Footer Text */}
-            <motion.div
-              className="login-footer-text"
+            <motion.div 
+              className="login-info"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
             >
-              <p className="footer-info">
-                Protected by Google Authentication • Only authorized administrators can access this panel
+              <p className="info-text">
+                🔐 Only authorized administrators can access this panel
               </p>
             </motion.div>
           </div>
 
-          {/* Footer */}
           <div className="login-footer">
             <span>© {new Date().getFullYear()} MUVIMAX. All rights reserved.</span>
           </div>
