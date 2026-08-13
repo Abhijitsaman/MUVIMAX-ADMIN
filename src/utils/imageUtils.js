@@ -40,8 +40,8 @@ export const normalizeGoogleDriveUrl = (url) => {
   const fileId = extractGoogleDriveFileId(url);
   if (!fileId) return url;
   
-  // Return direct download URL
-  return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  // Use googleusercontent.com format - much more reliable for direct image embedding
+  return `https://lh3.googleusercontent.com/d/${fileId}`;
 };
 
 export const normalizeImageUrl = (url) => {
