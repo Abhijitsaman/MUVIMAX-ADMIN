@@ -42,7 +42,7 @@ const AdminDashboard = () => {
         const languagesSnap = await getDocs(collection(db, 'languages'));
         const castSnap = await getDocs(collection(db, 'cast'));
 
-        // Recent movies
+        // Recent movies (only published)
         const recentQuery = query(
           collection(db, 'movies'),
           orderBy('createdAt', 'desc'),
