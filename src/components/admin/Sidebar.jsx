@@ -14,7 +14,8 @@ import {
   FaCog,
   FaChevronLeft,
   FaChevronRight,
-  FaLayerGroup
+  FaLayerGroup,
+  FaFileAlt
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
@@ -44,6 +45,7 @@ const Sidebar = () => {
       label: 'Content',
       children: [
         { key: 'movies', icon: FaFilm, label: 'Movies', path: '/admin/movies' },
+        { key: 'drafts', icon: FaFileAlt, label: 'Drafts', path: '/admin/drafts' },
         { key: 'banners', icon: FaImage, label: 'Hero Banners', path: '/admin/banners' }
       ]
     },
