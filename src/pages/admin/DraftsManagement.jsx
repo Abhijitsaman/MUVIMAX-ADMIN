@@ -32,6 +32,7 @@ import { format } from 'date-fns';
 const DraftsManagement = () => {
   const [drafts, setDrafts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [draftToDelete, setDraftToDelete] = useState(null);
@@ -46,14 +47,22 @@ const DraftsManagement = () => {
       orderBy('createdAt', 'desc')
     );
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const draftsData = [];
-      snapshot.forEach((doc) => {
-        draftsData.push({ id: doc.id, ...doc.data() });
-      });
-      setDrafts(draftsData);
-      setLoading(false);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const draftsData = [];
+        snapshot.forEach((doc) => {
+          draftsData.push({ id: doc.id, ...doc.data() });
+        });
+        setDrafts(draftsData);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('Drafts fetch error:', error);
+        setLoadError(error.message);
+        setLoading(false);
+      }
+    );
 
     return () => unsubscribe();
   }, []);
@@ -116,6 +125,16 @@ const DraftsManagement = () => {
       <div className="page-loading">
         <div className="loading-spinner"></div>
         <p>Loading drafts...</p>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="page-loading">
+        <p style={{ color: 'red', wordBreak: 'break-all', padding: '20px' }}>
+          Error: {loadError}
+        </p>
       </div>
     );
   }
