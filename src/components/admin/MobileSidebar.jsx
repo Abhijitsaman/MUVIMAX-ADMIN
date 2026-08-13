@@ -12,13 +12,15 @@ import {
   FaCog,
   FaTimes,
   FaSignOutAlt,
-  FaLayerGroup
+  FaLayerGroup,
+  FaFileAlt
 } from 'react-icons/fa';
 
 const MobileSidebar = ({ isOpen, onClose, onLogout }) => {
   const menuItems = [
     { icon: FaHome, label: 'Dashboard', path: '/admin/dashboard' },
     { icon: FaFilm, label: 'Movies', path: '/admin/movies' },
+    { icon: FaFileAlt, label: 'Drafts', path: '/admin/drafts' },
     { icon: FaImage, label: 'Hero Banners', path: '/admin/banners' },
     { icon: FaLayerGroup, label: 'Categories', path: '/admin/categories' },
     { icon: FaMusic, label: 'Genres', path: '/admin/genres' },
