@@ -12,6 +12,9 @@ import AdminProfile from '../pages/admin/AdminProfile';
 import MoviesManagement from '../pages/admin/MoviesManagement';
 import MovieAdd from '../pages/admin/MovieAdd';
 
+// Drafts
+import DraftsManagement from '../pages/admin/DraftsManagement';
+
 // Banners
 import BannersManagement from '../pages/admin/BannersManagement';
 import BannerAdd from '../pages/admin/BannerAdd';
@@ -91,6 +94,9 @@ const AdminRoutes = () => {
         <Route path="movies" element={<MoviesManagement />} />
         <Route path="movies/add" element={<MovieAdd />} />
         <Route path="movies/edit/:id" element={<MovieAdd />} />
+        
+        {/* Drafts */}
+        <Route path="drafts" element={<DraftsManagement />} />
         
         {/* Banners */}
         <Route path="banners" element={<BannersManagement />} />
