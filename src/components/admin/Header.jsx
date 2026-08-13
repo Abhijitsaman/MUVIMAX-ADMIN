@@ -27,6 +27,7 @@ const Header = ({ onMenuToggle, onLogout, user }) => {
     const titles = {
       'dashboard': 'Dashboard',
       'movies': 'Movies',
+      'drafts': 'Drafts',
       'banners': 'Hero Banners',
       'categories': 'Categories',
       'genres': 'Genres',
