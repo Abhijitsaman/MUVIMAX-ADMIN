@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { db, storage } from '../../firebase/config';
-import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp, getDocs } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { normalizeImageUrl } from '../../utils/imageUtils';
 import {
@@ -235,7 +235,7 @@ const BannerAdd = () => {
     try {
       const bannerData = {
         ...formData,
-        image: bannerImage.url || bannerImage.preview,
+        image: normalizeImageUrl(bannerImage.url) || bannerImage.preview,
         updatedAt: serverTimestamp()
       };
 
@@ -408,7 +408,6 @@ const BannerAdd = () => {
             </div>
           </div>
 
-          {/* Rest of the form remains the same */}
           {/* Banner Information */}
           <div className="form-section full-width">
             <h3>Banner Information</h3>
