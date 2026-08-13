@@ -28,6 +28,7 @@ import {
   FaToggleOff,
   FaChevronLeft,
   FaChevronRight,
+  FaChevronDown,
   FaSort,
   FaSortUp,
   FaSortDown,
